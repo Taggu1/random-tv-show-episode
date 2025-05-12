@@ -9,7 +9,7 @@ abstract class RandomEpisodeRemoteDataSource {
 class RandomEpisodeRemoteDataSourceImpl extends RandomEpisodeRemoteDataSource {
   @override
   Future<List<Episode>> fetchEpisodes({required int showId}) async {
-    final uri = Uri.parse('http://api.tvmaze.com/shows/$showId/episodes');
+    final uri = Uri.parse('https://api.tvmaze.com/shows/$showId/episodes');
     final response = await http.get(uri);
 
     if (response.statusCode != 200) {
