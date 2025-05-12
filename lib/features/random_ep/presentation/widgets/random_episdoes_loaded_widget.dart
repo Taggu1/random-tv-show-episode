@@ -12,6 +12,7 @@ class RandomEpisdoeLoadedWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(episode.runtime);
+    Size size = MediaQuery.of(context).size;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,27 +32,49 @@ class RandomEpisdoeLoadedWidget extends StatelessWidget {
         SelectableText(
           "Watch Episode ${episode.number} From The office Season ${episode.season}\nName ${episode.name}",
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
+        if (size.width > 500)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomButton(
+                onTap: () async {
+                  if (!await launchUrl(Uri.parse(episode.url))) {
+                    throw Exception('Could not launch ${episode.url}');
+                  }
+                },
+                title: "Go to episode",
+              ),
+              CustomButton(
+                onTap: () {
+                  context.read<RandomEpisodeCubit>().fetchEpisodes();
+                },
+                title: "Load another one",
+              ),
+            ],
+          ),
+        if (size.width <= 500)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomButton(
+                onTap: () async {
+                  if (!await launchUrl(Uri.parse(episode.url))) {
+                    throw Exception('Could not launch ${episode.url}');
+                  }
+                },
+                title: "Go to episode",
+              ),
+              SizedBox(height: 10),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomButton(
-              onTap: () async {
-                if (!await launchUrl(Uri.parse(episode.url))) {
-                  throw Exception('Could not launch ${episode.url}');
-                }
-              },
-              title: "Go to episode",
-            ),
-            CustomButton(
-              onTap: () {
-                context.read<RandomEpisodeCubit>().fetchEpisodes();
-              },
-              title: "Load another one",
-            ),
-          ],
-        ),
+              CustomButton(
+                onTap: () {
+                  context.read<RandomEpisodeCubit>().fetchEpisodes();
+                },
+                title: "Load another one",
+              ),
+            ],
+          ),
       ],
     );
   }
